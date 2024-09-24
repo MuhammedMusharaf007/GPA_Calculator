@@ -53,14 +53,18 @@
 </head>
 <body>
     <h1>CGPA Calculator</h1>
-    <form action="/calculate" method="post">
+    <form id="cgpaForm">
         <div id="subjects">
             <div>
                 <label>Grade: 
                     <select name="grades">
-                        {% for grade, point in grade_points.items() %}
-                            <option value="{{ grade }}">{{ grade }}</option>
-                        {% endfor %}
+                        <option value="10">A+</option>
+                        <option value="9">A</option>
+                        <option value="8">B+</option>
+                        <option value="7">B</option>
+                        <option value="6">C</option>
+                        <option value="5">D</option>
+                        <option value="0">F</option>
                     </select>
                 </label>
                 <label>Credit: 
@@ -69,8 +73,9 @@
             </div>
         </div>
         <button type="button" onclick="addSubject()">Add Subject</button>
-        <button type="submit">Calculate CGPA</button>
+        <button type="button" onclick="calculateCGPA()">Calculate CGPA</button>
     </form>
+    <div id="result"></div>
     <div class="footer">
         © Mush
     </div>
@@ -81,15 +86,36 @@
             newSubject.innerHTML = `
                 <label>Grade: 
                     <select name="grades">
-                        {% for grade, point in grade_points.items() %}
-                            <option value="{{ grade }}">{{ grade }}</option>
-                        {% endfor %}
+                        <option value="10">A+</option>
+                        <option value="9">A</option>
+                        <option value="8">B+</option>
+                        <option value="7">B</option>
+                        <option value="6">C</option>
+                        <option value="5">D</option>
+                        <option value="0">F</option>
                     </select>
                 </label>
                 <label>Credit: 
                     <input type="number" name="credits" min="0" step="1" value="0">
                 </label>`;
             subjectsDiv.appendChild(newSubject);
+        }
+
+        function calculateCGPA() {
+            const grades = document.getElementsByName('grades');
+            const credits = document.getElementsByName('credits');
+            let totalPoints = 0;
+            let totalCredits = 0;
+
+            for (let i = 0; i < grades.length; i++) {
+                const grade = parseFloat(grades[i].value);
+                const credit = parseFloat(credits[i].value);
+                totalPoints += grade * credit;
+                totalCredits += credit;
+            }
+
+            const cgpa = totalPoints / totalCredits;
+            document.getElementById('result').innerText = `Your CGPA is: ${cgpa.toFixed(2)}`;
         }
     </script>
 </body>
